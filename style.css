@@ -1,3 +1,61 @@
+@media only screen and (max-width: 479px) {
+  body {
+    height: 100% !important;
+    font-size: 1.5rem !important;
+  }
+
+  #topBarButtonsDiv {
+    position: sticky !important;
+    display: block !important;
+    float: left !important;
+    width: 100% !important;
+    background-color: #000000 !important;
+  }
+
+  #lyricsTextArea::placeholder {
+    font-size: 2rem !important;
+  }
+
+  .licence {
+    position: absolute !important;
+    right: 0px !important;
+    top: 0px !important;
+    font-size: 0.8rem !important;
+  }
+
+  #topBar {
+    height: 5rem !important;
+    width: 100% !important;
+  }
+
+  #uploadFileScreen {
+    margin: 6% 0 0 0 !important;
+    border-radius: 0 !important;
+    padding: 2rem !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  #controlsConainer {
+    font-size: 1.2rem !important;
+  }
+
+  #syncButton {
+    display: block !important;
+    height: 100px !important;
+    width: 100% !important;
+    margin: 5px 0 5px 0 !important;
+    text-align: center !important;
+  }
+
+  #GenerateFileButton {
+    display: inline-block !important;
+    width: 25% !important;
+    position: relative !important;
+    bottom: 24px  !important;
+  }
+}
+
 .hidden {
     display: none;
 }
