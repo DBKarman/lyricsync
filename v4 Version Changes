@@ -1,0 +1,10 @@
+Complete overhaul of the code to make it easier to read and change
+
+New Features:
+    Added ability to edit lines on the syncing screen instead of having to 
+        back to first screen which makes you loose all your progress
+    Added visual aid to see the syncing that has been done in real time
+    Added support for album tags
+    The help menu now runs by default when clicking onto the 3rd screen
+    Fixed Firefox issue where the first line would not be selected by default
+    + lots of other fixes which make it harder for you to do something wrong :)

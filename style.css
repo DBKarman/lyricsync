@@ -1,0 +1,397 @@
+.hidden {
+    display: none;
+}
+
+html body {
+    font-family: BentonSans, sans-serif;
+    background-color: #131417;
+    color: #ffffff;
+    min-width: 865px;
+    margin: 0px;
+}
+body::-webkit-scrollbar {
+    /* background: #131417; */
+    width: 0;
+}
+
+#topBar {
+    background-color: #000000;
+    min-height: 50px;
+    margin: 0px;
+    border-bottom: 0px solid #ffffff;
+    padding: 5px;
+    height: 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#logoHeader {
+    margin: 10px 4px 5px 5px;
+    text-align: left;
+    width: fit-content;
+    display: inline;
+}
+
+
+.topBarTextInput {
+    background-color: inherit;
+    border: 0px solid #ffffff;
+    margin: 0;
+    height: 45px;
+    width: 150px;
+    color: #22b9e3;
+    font-size: 100%;
+}
+.topBarTextInput::placeholder {
+    position: relative;
+    top: 0;
+    /* color: #d6d6d6; */
+    opacity: 1;
+    font-size: 115%;
+}
+.topBarTextInput:focus {
+    border: 0px solid #131417;
+    box-shadow: 0 0 3px #131417;
+    outline-offset: 0px;
+    outline: none;
+}
+
+
+#topBarButtonsDiv {
+    width: 424px;
+    float: right;
+}
+
+.topBarButton {
+    background-color: inherit;
+    border: 0px solid #ffffff;
+    margin: 0;
+    height: 45px;
+    color: #22b9e3;
+    font-size: 100%;
+    border-radius: 0.5em;
+    margin: 0 1.5%;
+    align-items: right;
+}
+.topBarButton:hover {
+    background-color: #2874ed;
+    cursor: pointer;
+}
+
+
+#enterLyricsScreen textarea { 
+    background-color: #2f3335;
+    overflow: visible;
+    resize: none;
+    margin: 0;
+    padding: 3px 0.2% 0 0.2%;
+    border: 0px solid #ffffff;
+    width: 99.6%;
+    height: 500px;
+    color: #ffffff;
+}
+#enterLyricsScreen textarea:focus {
+    outline: none;
+}
+
+#enterLyricsScreen textarea::placeholder {
+    position: relative;
+    top: 45%;
+    display: block;
+    text-align: center;
+    opacity: 1;
+}
+
+#enterLyricsScreen textarea::-webkit-scrollbar {
+    /* background: #131417; */
+    width: 0;
+}
+
+#cogIcon {
+    height: 15px;
+}
+
+.licence {
+    position: absolute;
+    margin: 10px;
+    bottom: 0;
+    right: 0;
+    font-size: 70%;
+    color: #919191;
+}
+.licenceLink:link {
+    color: #919191;
+}
+.licenceLink:visited {
+    color: #919191;
+}
+
+#uploadFileScreen {
+    display: none;
+    background-color: #2E3132;
+    width: 67%;
+    margin: 5px auto;
+    border-radius: 0.5em;
+    padding: 13px;
+}
+
+#fileSelector {
+    background-color: #22b9e3;
+    border: 2px solid #ffffff;
+    border-radius: 0.4em;
+    text-align: center;
+    width: 124px;
+}
+#fileSelector::-webkit-file-upload-button {
+    visibility: hidden;
+    width: 0;
+}
+
+
+
+
+#syncLyricsScreen {
+    display: none;
+    background-color: #1F2839;
+    width: 100%;
+    height: 85%;
+    margin: 5px auto;
+    padding: 0;
+    overflow-y: scroll;
+}
+#syncLyricsScreen::-webkit-scrollbar {
+    /* background: #131417; */
+    width: 0;
+}
+
+#audioPlayerBar {
+    display: none;
+    position: sticky;
+    min-width: 770px;
+    bottom: 0;
+    z-index: 99;
+    width: 100%;
+    background-color: #131417;
+    margin: 0;
+    padding: 0;
+}
+
+#audioPlaybackBarSpan {
+    display: inline-block;
+    width: 100%;
+}
+
+#audioPlaybackBar {
+    margin: 0 auto;
+    width: 100%;
+    display: inline;
+}
+
+.audioControlButton {
+    display: inline-block;
+    width: 120px;
+    background-color: #2874ed;
+    /* padding: 2x 5px; */
+    border-radius: 00.3em;
+    text-align: center;
+}
+
+.audioButton {
+    background-color: #2874ed;
+    padding: 2x 5px;
+    border-radius: 00.3em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 20px;
+}
+
+.audioControlButton:hover {
+    cursor: pointer;
+}
+
+
+#mainControls {
+    display: inline-block;
+    width: 390px;
+}
+
+#controlsConainer {
+    display: block;
+    margin: 13px 0 0 0;
+    width: 659px;
+    margin: 0 auto;
+}
+
+/*Bottom 3*/
+#audioControlsP {
+    position: relative;
+    right: 2px;
+    padding: 0 0.5%;
+    margin: 0px;
+}
+
+#audioControlButtonPara {
+    position: relative;
+    bottom: 0px;
+    width: 100%;
+    display: inline-block;
+    margin: 0 0%;
+}
+
+#syncButton {
+    position: relative;
+    bottom: 10px;
+    font-size: 150%;
+    width: 130px;
+    height: 50px;
+    /* margin-left: 32.8%; */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#hintsAB {
+    min-width: 100px;
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    margin-left: 0% !important;
+}
+
+#timeDisplay {
+    position: relative;
+    top: 3px;
+    width: 115px;
+    margin: 0 2px;
+    text-align: center;
+    display: inline-block;
+}
+
+#volumeSlider {
+    position: relative;
+    top: 7px;
+    width: 120px;
+}
+
+.audioButton:hover {
+    cursor: pointer;
+}
+
+#GenerateFileButton {
+    display: inline-flex;
+    position: relative;
+    bottom: 13px;
+    width: 130px;
+    height: 50px;
+    right: 20px;
+    border-radius: 0.3em;
+    font-size: 130%;
+}
+
+
+
+
+.tableRowBackgroundColour0 {
+    background-color: #323C50;
+}
+.tableRowBackgroundColour1 {
+    background-color: #2C3346;
+}
+
+#tableTimeColumn0 {
+    border-top-left-radius: 1em;
+}
+
+#syncLyricsScreen table {
+    border-collapse: collapse;
+    margin: 10px 0px 10px 10px;
+}
+
+.tableTimeColumns {
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    padding: 10px;
+}
+
+.tableLyricsColumns {
+    width: 100%;
+    border-left: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    padding: 10px;
+}
+
+
+#WarningBox {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 200px;
+    height: fit-content;
+    background-color: rgb(131, 13, 13);
+    opacity: 0;
+    padding: 10px;
+    border-radius: 20px;
+    z-index: -10000;
+
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;
+    -o-transition: opacity 0.5s ease-in;
+    -ms-transition: opacity 0.5s ease-in;
+    transition: opacity 0.5s ease-in;
+}
+
+#topBarSettingsPopup {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    background-color: #1F2839;
+    border-radius: 1em;
+    padding: 15px;
+    width: 150px;
+    height: 70px;
+    display: none;
+}
+
+#cogPopupCloseX {
+    color: #ff0000;
+    display: block;
+    text-align: right;
+}
+
+#cogPopupXX:hover {
+    cursor: pointer;
+}
+
+#cogPopupSelectTimeOffset {
+    color: #ffffff;
+    background-color: #323C50;
+    padding: 4px;
+    border-radius: 0.4em;
+}
+
+.tableLyricsColumnInput {
+    width: 100%;
+    background-color: inherit;
+    color: #ffffff;
+    outline: solid 0px transparent;
+    border: 0px solid transparent;
+    padding: 0px;
+    margin: 0px;
+    font-weight: 500;
+    font-size: 150%;
+}
+
+.tableLyricsColumnInput:focus {
+    width: 100%;
+    background-color: inherit;
+    color: #ffffff;
+    outline: solid 0px transparent;
+    border: 0px solid transparent;
+    padding: 0px;
+    margin: 0px;
+    font-weight: 500;
+    font-size: 150%;
+}
