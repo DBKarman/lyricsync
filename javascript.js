@@ -772,8 +772,10 @@ $("#GenerateFileButton").click(() => {
     if ($("#topBarSongNameInput").val() == "") {
         console.log("Triggered");
         displayWarning("Please enter the song name, the field is at the top left corner of the screen.", 4000);
+        alert("Please enter the song name, the field is at the top left corner of the screen.");
     } else if ($("#topBarArtistNameInput").val() == "") {
         displayWarning("Please enter the artist's name, the field is at the top left corner of the screen.", 4000);
+        alert("Please enter the artist name, the field is at the top left corner of the screen.");
     } else {
         console.log("All required fields are met, finishItOff(); triggered");
         finishItOff();
