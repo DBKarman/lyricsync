@@ -1,3 +1,5 @@
+
+
 const j$ = (id) => { return document.getElementById(id);}
 
 //on load the lyricsTextArea height is changed because css cant do it for some reason
@@ -138,6 +140,10 @@ function topBarUploadFileButtonClicked() {
 
         //hide screen 1 and 3 and show screen 2
         hideScreen1(); hideScreen3(); showScreen2();
+
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
     }
 }
 
@@ -165,7 +171,7 @@ j$("fileSelector").addEventListener('change', (event) => {
 //run when the topBarSyncLinesButton button is clicked
 function topBarSyncLinesButtonClicked() {
     //check whether the user is allowed to click it
-    if (isTopBarButtonAccessible[1] == true) {
+    if (isTopBarButtonAccessible[2] == true) {
         //(red) dehighlite al buttons
         redHighliteTopBarButton("dehighlite", "topBarEntryLyricsButton");
         redHighliteTopBarButton("dehighlite", "topBarUploadFileButton");
@@ -198,7 +204,7 @@ $("#topBarSyncLinesButton").click(
         //we want to start off with the first element so
         tableLineClicked(0);
         //alerts the user with the help sheet
-        $("#hintsButton").click();
+        //$("#hintsButton").click();
     }
 );
 
@@ -228,7 +234,7 @@ function topBarEntryLyricsButtonClicked() {
 }
 
 //takes unique id and lyrics as parameters and returns a finished line to insert into the table,
-let tableLineSkeleton = (uniqueID, lyrics) => { 
+let tableLineSkeleton = (uniqueID, lyrics, timeStamp) => { 
     
     var backgroundColor = uniqueID%2;
 
@@ -242,8 +248,20 @@ let tableLineSkeleton = (uniqueID, lyrics) => {
             //add a class of tableColumns and tableTimeColumns
             "class='tableColumns tableTimeColumns tableRowBackgroundColour" + backgroundColor +"' "+
             //add unique id to each time column
-            "id='tableTimeColumn" + uniqueID + "'>0:00.00</td> " + 
-    
+            "id='tableTimeColumn" + uniqueID + "'>"+timeStamp+"</td> " + 
+        //Edit Time Table Image
+            "<td id='tableEditButtonColumn" + uniqueID + "' class='tableEditButtonColumnClass tableColumns tableRowBackgroundColour" + backgroundColor +"' onclick='tableLineDblClicked("+uniqueID+")'>" +
+            "<img class='tableEditButtonImageClass' src='pen-icon.png' alt='' >" +
+            "</td>" +
+        //Add Time Table Image
+            "<td id='tableAddButtonColumn" + uniqueID + "' class='tableEditButtonColumnClass tableColumns tableRowBackgroundColour" + backgroundColor +"' onclick='addNewLineAfterIndex("+uniqueID+")'>" +
+            "<img class='tableEditButtonImageClass' src='add-icon.png' alt='' >" +
+            "</td>" +
+        //Remove Time Table Image
+        //removeLineAtIndex
+            "<td id='tableRemoveButtonColumn" + uniqueID + "' class='tableEditButtonColumnClass tableColumns tableRowBackgroundColour" + backgroundColor +"' onclick='removeLineAtIndex("+uniqueID+")'>" +
+            "<img class='tableEditButtonImageClass' src='remove-icon.png' alt='' >" +
+            "</td>" +
         //Table Lyrics Columns:
             //add an onclick event to each table columns which also passes its unique id to each function so we can know which item was clicked
             "<td onclick='tableLineClicked("+uniqueID+")' " +
@@ -268,18 +286,20 @@ var lyricsLines = [];
 // Spits each item in array to a div and then assigns an id to them
 function assignLyricsToLinesInTable() {
     //assign each line in lyricsTextArea to lyricsLines
-    lyricsLines = $("#lyricsTextArea").val().split("\n");
+    if (developerTools && developerTools == true) {
+        //DEVELOPER TOOL
+        lyricsLines = testLyrics.split("\n");
+    } else {
+        lyricsLines = $("#lyricsTextArea").val().split("\n");
+    }
     // just a shortcut to access the lyricsTable which will store the lines
     let table = document.getElementById("lyricsTable");
     //clearts the innerHTML of the table
     table.innerHTML = "";
 
-    //TODO:
-    //let tableLyricsColumnSkeleton = ;
-
     //go through every element in lyricsLines and uses the tableLineSkeleton function to create valid html and insert it into the table
     for (i = 0; i < lyricsLines.length; i++) {
-        table.innerHTML += tableLineSkeleton(i, lyricsLines[i])
+        table.innerHTML += tableLineSkeleton(i, lyricsLines[i], "0:00.00")
         //console logs out when the for loop ends
         if (i == lyricsLines.length) {console.log("Emptied lyricsLines to table")}
     }
@@ -433,7 +453,7 @@ var maxLineSynced = 0;
 //says whether the line has been synced before
 let hasLineBeenSyncedBefore = (lineId) => {
     //reads the timespamp inside the table and compares it to "0:00.00"
-    let syncedBefore = ($("#tableTimeColumn"+lineId).html() !== "0:00.00")
+    let syncedBefore = ($("#tableTimeColumn"+lineId).html() != "0:00.00")
     return syncedBefore;
 }
 
@@ -656,7 +676,6 @@ function displayWarning(message, time) {
         j$("WarningBox").innerHTML = message;
         $("#WarningBox").css("opacity", "100");
         $("#WarningBox").css("z-index", "10000");
-        console.log($("#WarningBox").css("opacity"));
         setTimeout(() => {
             $("#WarningBox").css("opacity", "0");
             //wait until it is faded out before going to the back
@@ -770,19 +789,19 @@ function convertTimeToLrcFileFormat(time) {
 $("#GenerateFileButton").click(() => {
     //if either Song name or Album name field is empty then warn user and do nothing
     if ($("#topBarSongNameInput").val() == "") {
-        console.log("Triggered");
         displayWarning("Please enter the song name, the field is at the top left corner of the screen.", 4000);
-        alert("Please enter the song name, the field is at the top left corner of the screen.");
-    } else if ($("#topBarArtistNameInput").val() == "") {
+        WarnUserToFillOutField("topBarSongNameInput");
+    } if ($("#topBarArtistNameInput").val() == "") {
         displayWarning("Please enter the artist's name, the field is at the top left corner of the screen.", 4000);
-        alert("Please enter the artist name, the field is at the top left corner of the screen.");
+        WarnUserToFillOutField("topBarArtistNameInput");
     } else {
-        console.log("All required fields are met, finishItOff(); triggered");
+        console.log("All required fields are met, \"finishItOff();\" triggered");
         finishItOff();
     }
 })
 
 function finishItOff() {
+    finishEditingElement();
     var i = 0;
     let songName = $("#topBarSongNameInput").val();
     let artistName = $("#topBarArtistNameInput").val();
@@ -804,6 +823,7 @@ function finishItOff() {
         }
     }
 }
+
 
 // If an item in timeStamp[] is empty, it prints "NaN" to the .lrc file, this replaces it with 00:00.00
 function timeStampsVerify(timeStamp) {
@@ -832,6 +852,10 @@ function download(filename, text) {
 $(document).keydown( function(e) {
     var unicode = e.charCode ? e.charCode : e.keyCode;
     
+    if (editingWhatElement != -1) {
+        return;
+    }
+
     // if you want unicode code for any key, just un-comment this:
     console.log(unicode)
     // right arrow
@@ -870,18 +894,170 @@ $(document).keydown( function(e) {
     }
 });
 
+//warn user to fill out field
+function WarnUserToFillOutField(id) {
+    $('#' + id).css("transition", "background-color 0.2s ease-in");
+    $('#' + id).css("background-color", "#ff0000");
+    $('#' + id).css("border-radius", "0.2em");
+    setTimeout(() => {
+        $('#' + id).css("background-color", "inherit")
+    }, 500);
+}
+
 //stops default behaviour for space bar scrolling down page
 window.onkeydown = function(e) { 
     return !(e.keyCode == 32 && e.target == document.body);
 }; 
 
+//adds a new line between 2 lines
+async function addNewLineAfterIndex(index) {
+    //stops editing elemtns if the user is editing
+    finishEditingElement();
+    //saves edits made to arrays 
+    saveEditsToArrays();
+    //shifts all indexes in array to make space for new line
+    shiftAllIndexesAfter(index, lyricsLines);
+    //does the same to timeStamps
+    shiftAllIndexesAfter(index, timeStamps);
+    //clear the indexs we just added
+    lyricsLines[index+1] = "";
+    timeStamps[index+1] = 0;
+    //shifts all lines after selected line down
+    assignLyricsToLinesInTable_DontFetchLyricsFromFirstScreen();
+    //reformats the table
+    formatTheWholeTable();
+    //start edit of new line 
+    tableLineDblClicked(index+1);
+}
 
+//adds a new line between 2 lines
+async function removeLineAtIndex(index) {
+    //stops editing elemtns if the user is editing
+    finishEditingElement();
+    //saves edits made to arrays 
+    saveEditsToArrays();
+    //remove that index
+    removeIndexAt(index, lyricsLines);
+    //same for timeStamps
+    removeIndexAt(index, timeStamps);
+    //shifts all lines after selected line down
+    assignLyricsToLinesInTable_DontFetchLyricsFromFirstScreen();
+    //reformats the table
+    formatTheWholeTable();
+    tableLineClicked(selectedTableRow - 1);
+}
+
+//saves edits made to table
+function saveEditsToArrays() {
+    //get all lyrics and store it into lyrycsLines array to save editing
+    for (let i = 0; i < lyricsLines.length; i++) {
+        lyricsLines[i] = $("#tableLyricsColumn"+i).html();
+    }
+    //do same for timeStamps
+    for (let i = 0; i < lyricsLines.length; i++) {
+        timeStamps[i] = convertLRCtimeFormatToSeconds( $("#tableTimeColumn"+i).html() );
+    }
+}
+
+//shifts all indexes after to +1 
+function shiftAllIndexesAfter(index, array) {
+    //create a temporary arrary
+    tempArray = [];
+    //add all indexes which need to be shifted to tempArray
+    let j = 0;
+    for (let i = (index + 1); i < array.length; i++) {
+        tempArray[j] = array[i];
+        j++;
+    }
+
+    //add those indexes back to tempArray
+    j = index + 2;
+    for (let i = 0; i < tempArray.length; i++) {
+        array[j] = tempArray[i];
+        j++;
+    }
+}
+
+//shifts all indexes after to +1 
+function removeIndexAt(index, array) {
+    //create a temporary arrary
+    tempArray = [];
+    //add all indexes which need to be shifted to tempArray
+    let j = 0;
+    for (let i = (index + 1); i < array.length; i++) {
+        tempArray[j] = array[i];
+        j++;
+    }
+
+    //add those indexes back to array
+    j = index;
+    for (let i = 0; i < tempArray.length; i++) {
+        array[j] = tempArray[i];
+        j++;
+    }
+
+    //remove last index
+    array.pop();
+}
+
+// Spits each item in array to a div and then assigns an id to them
+function assignLyricsToLinesInTable_DontFetchLyricsFromFirstScreen() {
+    // just a shortcut to access the lyricsTable which will store the lines
+    let table = document.getElementById("lyricsTable");
+    //clearts the innerHTML of the table
+    table.innerHTML = "";
+
+    //go through every element in lyricsLines and uses the tableLineSkeleton function to create valid html and insert it into the table
+    for (i = 0; i < lyricsLines.length; i++) {
+        table.innerHTML += tableLineSkeleton(i, lyricsLines[i], convertTimeToLrcFileFormat_WithoutSquareBracketOnEnd(timeStampsVerify(timeStamps[i])))
+    }
+}
+
+//convert table format of time to time in milliseconds
+function convertLRCtimeFormatToSeconds(time) {
+    try {
+        let minutes = time.split(":")[0];
+        let seconds = time.split(":")[1].split(".")[0];
+        let miliseconds = time.split(":")[1].split(".")[1];
+        if (miliseconds.length > 3) {
+            miliseconds = miliseconds.slice(0, 3);
+        }
+        
+        let final = (
+            parseFloat(minutes * 60) + 
+            parseFloat(seconds) + 
+            parseFloat(miliseconds * ( 1 / (10**miliseconds.length)))
+            );
+            return final;
+    } catch (error) {
+        console.log("error, time: " + time + ". error message: " + error)
+        return 0;
+    }
+}
+
+function convertTimeToLrcFileFormat_WithoutSquareBracketOnEnd(time) {
+    var minutes, seconds, ms, formated; 
+    minutes = Math.floor(time/60);
+    seconds = Math.floor(time % 60);
+    ms = ( time - Math.floor(time) ) * 100
+    ms = Math.floor(ms)
+    if (seconds.toString().length == 1) {
+        seconds = "0" + seconds 
+    }
+    if (ms.toString().length == 1 ) {
+        ms = "0" + ms 
+    }
+    formated = ""+minutes + ":" + seconds + "." + ms
+    return(formated)
+}
 
 //DEVELOPER OPTIONS REMOVE WHEN FINISHED
 //hide screen 1 and 3 and show screen 2
-//whatScreenIsUserCurrentlyOn = 2;
-//hideScreen1(); hideScreen3(); showScreen2();
+// whatScreenIsUserCurrentlyOn = 2;
+// hideScreen1(); hideScreen3(); showScreen2();
 // isTopBarButtonAccessible[1] = true;
 // var testLyrics = "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy"
 // topBarUploadFileButtonClicked();
 ////////////////////////////////////////////////////////
+
+var developerTools = false;
