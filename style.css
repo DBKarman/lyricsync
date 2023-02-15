@@ -339,6 +339,8 @@ body::-webkit-scrollbar {
 }
 
 #GenerateFileButton {
+    background-color: #49fc7c;
+    color: #000000;
     display: inline-flex;
     position: relative;
     bottom: 13px;
@@ -383,7 +385,8 @@ body::-webkit-scrollbar {
 
 
 #WarningBox {
-    position: absolute;
+    display: block;
+    position: fixed;
     top: 70px;
     right: 20px;
     width: 200px;

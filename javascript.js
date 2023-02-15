@@ -18,7 +18,7 @@ $("#lyricsTextArea").attr("placeholder", 'Copy & paste lyrics into here\nYou can
 //isTopBarButtonAccessible[0] = enterLyricsScreen, corresponding button: topBarEntryLyricsButton
 //isTopBarButtonAccessible[1] = uploadFileScreen, corresponding button: topBarUploadFileButton
 //isTopBarButtonAccessible[2] = syncLyricsScreen, corresponding button: topBarSyncLinesButton
-var isTopBarButtonAccessible = [true, false, false];
+let isTopBarButtonAccessible = [true, false, false];
 
 //buts a line under the chosen topBar button to highlite youre on that screen
 function highliteTopBarButton(dehighliteOrHighlite, buttonId) {
@@ -49,7 +49,7 @@ function highliteTopBarButton(dehighliteOrHighlite, buttonId) {
 highliteTopBarButton("highlite", "topBarEntryLyricsButton");
 
 //just a tracker to keep track of what screen the user is on, set to 1 because thats the sreen the user is on at the start
-var whatScreenIsUserCurrentlyOn = 1;
+let whatScreenIsUserCurrentlyOn = 1;
 
 //highlites the button in red so the user knows they can now click on it
 function redHighliteTopBarButton(dehighliteOrHighlite, buttonId) {
@@ -64,7 +64,7 @@ function redHighliteTopBarButton(dehighliteOrHighlite, buttonId) {
     if (dehighliteOrHighlite == "highlite") {
         $("#"+buttonId).css("background-color", "#930000");
     } else if (dehighliteOrHighlite == "dehighlite") {
-        $("#"+buttonId).css("background-color", "");
+        $("#"+buttonId).css("background-color", "inherit");
     }
 
 
@@ -75,15 +75,39 @@ function redHighliteTopBarButton(dehighliteOrHighlite, buttonId) {
     }
 }
 
+//to only blip once
+let blipped = false;
 //when the user enters something into the text area grant them access to the 2nd screen and redHighlite it
 j$("lyricsTextArea").addEventListener('input', (event) => {
-    redHighliteTopBarButton("highlite", "topBarUploadFileButton");
+    if (!blipped) {
+        blip3Times("topBarUploadFileButton");
+        //break fuse and stop blipping
+        blipped = true;
+    }
     isTopBarButtonAccessible[1] = true;
 });
 
+//warnUsrTheyCanClickButton
+async function blip3Times(elementID) {
+    redHighliteTopBarButton("highlite", elementID);
+    await asyncReturnPromiseAfter(200);
+    redHighliteTopBarButton("dehighlite", elementID);
+    await asyncReturnPromiseAfter(200);
+    redHighliteTopBarButton("highlite", elementID);
+    await asyncReturnPromiseAfter(200);
+    redHighliteTopBarButton("dehighlite", elementID);
+    await asyncReturnPromiseAfter(200)
+    redHighliteTopBarButton("highlite", elementID);
+    return;
+}
+
 //Hides and displays time offset menu
 $("#topBarSettings").click(function() {
-    $("#topBarSettingsPopup").css("display", "block");
+    if ($("#topBarSettingsPopup").css("display") == "none") {
+        $("#topBarSettingsPopup").css("display", "block");
+    } else {
+        $("#topBarSettingsPopup").css("display", "none");
+    }
 });
 $("#cogPopupCloseX").click(function() {
     $("#topBarSettingsPopup").css("display", "none");
@@ -147,7 +171,6 @@ function topBarUploadFileButtonClicked() {
     }
 }
 
-
 //when the user clicks on the topBarUploadFileButton button,
 $("#topBarUploadFileButton").click(
     () => {
@@ -159,6 +182,34 @@ $("#topBarUploadFileButton").click(
 j$("fileSelector").addEventListener('change', (event) => {
     //loads the file from fileSelector to audioPlayback
     files = event.target.files;
+
+
+    const jsmediatags = window.jsmediatags
+    //try to read metadata to retrieve artist name and song name
+    console.log("triggered read metadata");
+    jsmediatags.read(files[0], {
+        onSuccess: function(tag) {
+            console.log(tag);
+            let songName = tag.tags.title;
+            if (songName.length > 0 && $("#topBarSongNameInput").val() == "") {
+                $("#topBarSongNameInput").val(songName);
+            }
+            let artistName = tag.tags.artist;
+            if (artistName.length > 0 && $("#topBarArtistNameInput").val() == "") {
+                $("#topBarArtistNameInput").val(artistName);
+            }
+            albumName = tag.tags.album;
+            if (albumName.length > 0 && $("#topBarAlbumNameInput").val() == "") {
+                $("#topBarAlbumNameInput").val(albumName);
+            }
+            
+
+        },
+        onError: function(error) {
+            console.error(error)
+        }
+    })  
+
     $("#audioPlaybackAudioSourceID").attr("src", URL.createObjectURL(files[0]));
     document.getElementById("audioPlayback").load();
     //changes the width of the fileSelector to allow space for the file name
@@ -195,18 +246,32 @@ function topBarSyncLinesButtonClicked() {
 //when the user clicks on the topBarSyncLinesButton button,
 $("#topBarSyncLinesButton").click(
     () => {
-        topBarSyncLinesButtonClicked();
-        assignLyricsToLinesInTable();
-        //determines whether the user is syncing or previewing
-        beginUserSyncingLinesIntrival();
-        //begins syncing the playbar
-        beginSyncingPlaybar();
-        //we want to start off with the first element so
-        tableLineClicked(0);
-        //alerts the user with the help sheet
-        //$("#hintsButton").click();
+        if (whatScreenIsUserCurrentlyOn != 3) {
+            showHintsAfter();
+            topBarSyncLinesButtonClicked();
+            assignLyricsToLinesInTable();
+            //determines whether the user is syncing or previewing
+            beginUserSyncingLinesIntrival();
+            //begins syncing the playbar
+            beginSyncingPlaybar();
+            //we want to start off with the first element so
+            tableLineClicked(0);
+            //alerts the user with the help sheet
+            //$("#hintsButton").click();
+        }
     }
 );
+
+//hints at user to use shift
+async function showHintsAfter() {
+    await asyncReturnPromiseAfter(1500);
+    displayWarning("Hint: Press shift/space to sync lines\ninstead of clicking 'Sync' button", 5500, "#1f6934", "white")
+}
+
+//resolves promise after specified amount of time
+function asyncReturnPromiseAfter(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
 
 //screen 1 button clicked
 $("#topBarEntryLyricsButton").click(() => {
@@ -236,7 +301,7 @@ function topBarEntryLyricsButtonClicked() {
 //takes unique id and lyrics as parameters and returns a finished line to insert into the table,
 let tableLineSkeleton = (uniqueID, lyrics, timeStamp) => { 
     
-    var backgroundColor = uniqueID%2;
+    let backgroundColor = uniqueID%2;
 
     //add a class to each row of the table
     line = "<tr class='tableLine' " + 
@@ -278,10 +343,10 @@ let tableLineSkeleton = (uniqueID, lyrics, timeStamp) => {
 }
 
 //holds the timespamps
-var timeStamps = [];
+let timeStamps = [];
 
 //new array to store the lyrics lines
-var lyricsLines = [];
+let lyricsLines = [];
 
 // Spits each item in array to a div and then assigns an id to them
 function assignLyricsToLinesInTable() {
@@ -319,16 +384,16 @@ function tableLineClicked(rowId) {
     }
 }
 
-var editingWhatElement = -1;
+let editingWhatElement = -1;
 function tableLineDblClicked(rowId) {
     //just incase the user was editing another element we finish editing it
     finishEditingElement();
     //set editingWhatElement to rowIf
     editingWhatElement = rowId;
     //get the lyrics inside the line
-    var lyricsInsideLine = j$("tableLyricsColumn"+rowId).innerHTML;
+    let lyricsInsideLine = j$("tableLyricsColumn"+rowId).innerHTML;
     //make an input type text with no intitial value because any value we set to it till mess up if theres any ' or " inside the value we give"
-    var inputTypeText = "<input class='tableLyricsColumnInput' type='text' id='tableLyricsColumnInput"+rowId+"'>";
+    let inputTypeText = "<input class='tableLyricsColumnInput' type='text' id='tableLyricsColumnInput"+rowId+"'>";
     //replace the value of the <td></td> with inputTypeText
     j$("tableLyricsColumn"+rowId).innerHTML = inputTypeText;
     //add the value now
@@ -356,7 +421,7 @@ function finishEditingElement() {
 
 //IMPORTANT GLOBAL VARIABLE
 //the table row id of which the user is currently settings the time stamp 
-var selectedTableRow = 0;
+let selectedTableRow = 0;
 
 //sets the colour of the row of which the table row the user is setting the time stamp to to BLUE
 function colorTableRowBlue(rowId) {
@@ -420,12 +485,12 @@ $("#hintsButton").click(() => {
     alert(""+
     "Single click on a line to start syncing from it\n"+
     "Double click on a line to change its content\n"+
-    "Click "+
-    "Space/K: pause/play\n"+
+    " \n"+
+    "K: pause/play\n"+
     "J: -2s\nL: +2s\n"+
     "Arrow right: +5s\n"+
     "Arrow left: -5s\n"+
-    "Shift: Sync Line"
+    "Shift/Space: Sync Line"
     );
 })
 
@@ -444,7 +509,7 @@ $("#forwardButton").click( function() {
 });
 
 //stores the id of the max line synced in order to keep track of where the user is up to
-var maxLineSynced = 0;
+let maxLineSynced = 0;
 
 ///////////////
 // Syncing Lines
@@ -469,7 +534,7 @@ function syncLine() {
         // change the timespamp
         $("#tableTimeColumn"+selectedTableRow).html( formatTimeTommssms( audio.currentTime + getTimeOffset() ) );
         //adds the timestamp to timeStamps array
-        timeStamps[selectedTableRow] = audio.currentTime + getTimeOffset();
+        timeStamps[selectedTableRow] = timeStampsVerify(audio.currentTime + getTimeOffset());
 
         //sets maxSyncedLine to timeStamps.Length
         maxLineSynced = timeStamps.length;
@@ -494,7 +559,7 @@ function syncLine() {
             Element.prototype.documentOffsetTop = function () {
                 return this.offsetTop + ( this.offsetParent ? this.offsetParent.documentOffsetTop() : 0 );
             };
-            var top = document.getElementById("tableTimeColumn"+selectedTableRow).documentOffsetTop() - ( window.innerHeight / 2 );
+            let top = document.getElementById("tableTimeColumn"+selectedTableRow).documentOffsetTop() - ( window.innerHeight / 2 );
             window.scrollTo( { top: top, behavior: 'smooth' });
         } catch (e) {
             console.log("window.scrollTo error\n\n" + e);
@@ -503,7 +568,7 @@ function syncLine() {
     } else {
         displayWarning("A timestamp preceding the current one has a"+
         " greater timestamp than the current one, please either change that or "+
-        "wait until the audio reaches a higher timestamp", 4000);
+        "wait until the audio reaches a higher timestamp", 4000, "default", "default");
     }
 }
 
@@ -511,9 +576,9 @@ function syncLine() {
 function resetAllTimestampsAfer(rowId) {
     //console.log("reset timestamp elements starting at " + i);
     //get the timeStamo of rowId
-    var initialTimestamp = timeStamps[rowId];
+    let initialTimestamp = timeStamps[rowId];
     //for all lines after lyricsLines[rowId]
-    for (var i = rowId + 1; i < lyricsLines.length; i++) {
+    for (let i = rowId + 1; i < lyricsLines.length; i++) {
         //if the timestamp of the line being investigated is less than initialTimestamp reset that line
         if (timeStamps[i] < initialTimestamp) {
             //clears timeStamps after the selected element
@@ -627,7 +692,7 @@ function formatTheWholeTable() {
 
 //Formats seconds into minutes:seconds:ms and returns it that way
 function formatTimeTommssms(time) {
-    var floored, minutes, seconds, ms, formated; 
+    let floored, minutes, seconds, ms, formated; 
 
     // To not break the code
     if (time < 0) {time = 0}
@@ -670,24 +735,39 @@ function getTimeOffset() {
 //is displayWarning already displaying
 let isDisplayWarningFree = true;
 //Displays a warning message to the user
-function displayWarning(message, time) {
+async function displayWarning(message, time, backgroundColor, color) {
     if (isDisplayWarningFree) {
         isDisplayWarningFree = false;
         j$("WarningBox").innerHTML = message;
-        $("#WarningBox").css("opacity", "100");
+        //if default then default else backgroundColor
+        if (backgroundColor == "default") {
+            $("#WarningBox").css("background-color", "rgb(131, 13, 13)");
+        } else {
+            $("#WarningBox").css("background-color", backgroundColor);
+        }
+        //same for color
+        if (color == "default") {
+            $("#WarningBox").css("color", "#ffffff");
+        } else {
+            $("#WarningBox").css("color", color);
+        }
+
+        //make it visible
+        $("#WarningBox").css("display", "block");
         $("#WarningBox").css("z-index", "10000");
-        setTimeout(() => {
-            $("#WarningBox").css("opacity", "0");
-            //wait until it is faded out before going to the back
-                setTimeout(
-                    () => {
-                        $("#WarningBox").css("z-index", "-10000");
-                        isDisplayWarningFree = true;
-                    } 
-                    ,1000
-                );
+        $("#WarningBox").css("opacity", "100");
+
+        await asyncReturnPromiseAfter(time);
+        
+        $("#WarningBox").css("opacity", "0");
+        
+        //wait until it is faded out before changing display and zindex
+        await asyncReturnPromiseAfter(200);
+        
+        $("#WarningBox").css("display", "none");
+        $("#WarningBox").css("z-index", "-10000");
+        isDisplayWarningFree = true;
             
-        }, time);
     } else {
         console.log("Display Warning failed\nAlready displaying message");
     }
@@ -699,7 +779,7 @@ function setPlaybackTime(time) {
 }
 
 //sets the time stamp of the audio
-var rangeBar = document.getElementById("audioPlaybackBar");
+let rangeBar = document.getElementById("audioPlaybackBar");
 
 rangeBar.value = 0;
 
@@ -709,7 +789,7 @@ rangeBar.value = 0;
     so we add 2 event listeners for mousedown and mouseup so that we dont sync
     the playbar when the user has mouse down on the playbar
 */
-var playbackBarUpdateClearance = true; 
+let playbackBarUpdateClearance = true; 
 rangeBar.addEventListener("mousedown", () => {
     playbackBarUpdateClearance = false;
     console.log("playbackBarUpdateClearance revoked");
@@ -751,7 +831,7 @@ function beginSyncingPlaybar() {
 
 //Formats seconds into minutes:seconds and returns it that way
 function formatTime(time) {
-    var minutes, seconds, formated; 
+    let minutes, seconds, formated; 
     time = Math.floor(time);
     minutes = Math.floor(time/60);
     seconds = time % 60;
@@ -765,7 +845,7 @@ function formatTime(time) {
 
 // Converts given time (in seconds) to format "[mm:ss.ms]"
 function convertTimeToLrcFileFormat(time) {
-    var minutes, seconds, ms, formated; 
+    let minutes, seconds, ms, formated; 
     minutes = Math.floor(time/60);
     seconds = Math.floor(time % 60);
     ms = ( time - Math.floor(time) ) * 100
@@ -788,21 +868,47 @@ function convertTimeToLrcFileFormat(time) {
 //if the user clicks generate file then triger finishItOff()
 $("#GenerateFileButton").click(() => {
     //if either Song name or Album name field is empty then warn user and do nothing
-    if ($("#topBarSongNameInput").val() == "") {
-        displayWarning("Please enter the song name, the field is at the top left corner of the screen.", 4000);
-        WarnUserToFillOutField("topBarSongNameInput");
-    } if ($("#topBarArtistNameInput").val() == "") {
-        displayWarning("Please enter the artist's name, the field is at the top left corner of the screen.", 4000);
-        WarnUserToFillOutField("topBarArtistNameInput");
-    } else {
-        console.log("All required fields are met, \"finishItOff();\" triggered");
+    if (allowedToFinishItOff()) {
         finishItOff();
     }
 })
 
+//every if statement in this has to be skipped to return true 
+let allowedToFinishItOff = () => {
+    if ($("#topBarSongNameInput").val() == "") {
+        displayWarning("Please enter the song name, the field is at the top left corner of the screen.", 4000, "default", "default");
+        WarnUserToFillOutField("topBarSongNameInput");
+        return false;
+    } if ($("#topBarArtistNameInput").val() == "") {
+        displayWarning("Please enter the artist's name, the field is at the top left corner of the screen.", 4000, "default", "default");
+        WarnUserToFillOutField("topBarArtistNameInput");
+        return false;
+    } if (!isTimeStampsValid()) {
+        displayWarning("Not all lines have been synced", 5000, "default", "default");
+        return false;
+    }
+
+    return true
+}
+
+let isTimeStampsValid = () => {
+    //go through each timeStamp and verify that each timeStamp is greater than or equal to the one after
+    let greatestTimeStamp = 0;
+    //for each index avalible
+    for (let i = 0; i < lyricsLines.length; i++) {
+        //check if a corresponding index in timeStamps exists and that it is greater than the one before
+        if (timeStampsVerify(timeStamps[i]) >= greatestTimeStamp) {
+            greatestTimeStamp = timeStampsVerify(timeStamps[i]);
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
 function finishItOff() {
     finishEditingElement();
-    var i = 0;
+    let i = 0;
     let songName = $("#topBarSongNameInput").val();
     let artistName = $("#topBarArtistNameInput").val();
     let albumName = $("#topBarAlbumNameInput").val();
@@ -827,7 +933,7 @@ function finishItOff() {
 
 // If an item in timeStamp[] is empty, it prints "NaN" to the .lrc file, this replaces it with 00:00.00
 function timeStampsVerify(timeStamp) {
-    if (timeStamp) {
+    if (timeStamp && timeStamp >= 0) {
         return timeStamp
     } else {
         return 0;
@@ -835,7 +941,7 @@ function timeStampsVerify(timeStamp) {
 }
 
 function download(filename, text) {
-    var element = document.createElement('a');
+    let element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
   
@@ -850,14 +956,14 @@ function download(filename, text) {
 
 // KEY CONTROLS
 $(document).keydown( function(e) {
-    var unicode = e.charCode ? e.charCode : e.keyCode;
+    let unicode = e.charCode ? e.charCode : e.keyCode;
     
     if (editingWhatElement != -1) {
         return;
     }
 
     // if you want unicode code for any key, just un-comment this:
-    console.log(unicode)
+    //console.log(unicode)
     // right arrow
     if (unicode == 39) {
         seek(+5);
@@ -878,11 +984,14 @@ $(document).keydown( function(e) {
     else if (unicode == 13) {
         finishEditingElement();
     }
-    // Spacebar or K
-    else if (unicode == 32 || unicode == 75) {
+    else if (unicode ==  75) {
+        $("#playButton").click();
+    }
+    // Spacebar
+    else if (unicode == 32) {
         //if the user isnt editing an element then enable spacebar
         if (editingWhatElement == -1) {
-            playButtonCLicked()
+            syncLine();
         }
     } 
     //shift
@@ -895,13 +1004,12 @@ $(document).keydown( function(e) {
 });
 
 //warn user to fill out field
-function WarnUserToFillOutField(id) {
+async function WarnUserToFillOutField(id) {
     $('#' + id).css("transition", "background-color 0.2s ease-in");
     $('#' + id).css("background-color", "#ff0000");
     $('#' + id).css("border-radius", "0.2em");
-    setTimeout(() => {
-        $('#' + id).css("background-color", "inherit")
-    }, 500);
+    await asyncReturnPromiseAfter(500);
+    $('#' + id).css("background-color", "inherit")
 }
 
 //stops default behaviour for space bar scrolling down page
@@ -1036,7 +1144,7 @@ function convertLRCtimeFormatToSeconds(time) {
 }
 
 function convertTimeToLrcFileFormat_WithoutSquareBracketOnEnd(time) {
-    var minutes, seconds, ms, formated; 
+    let minutes, seconds, ms, formated; 
     minutes = Math.floor(time/60);
     seconds = Math.floor(time % 60);
     ms = ( time - Math.floor(time) ) * 100
@@ -1051,13 +1159,87 @@ function convertTimeToLrcFileFormat_WithoutSquareBracketOnEnd(time) {
     return(formated)
 }
 
+
+
+
+let developerTools = false;
 //DEVELOPER OPTIONS REMOVE WHEN FINISHED
-//hide screen 1 and 3 and show screen 2
-// whatScreenIsUserCurrentlyOn = 2;
-// hideScreen1(); hideScreen3(); showScreen2();
-// isTopBarButtonAccessible[1] = true;
-// var testLyrics = "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy"
-// topBarUploadFileButtonClicked();
+////////////////////////////////////////////////////////
+if (developerTools == true) {
+    whatScreenIsUserCurrentlyOn = 2;
+    hideScreen1(); hideScreen3(); showScreen2();
+    isTopBarButtonAccessible[1] = true;
+    var testLyrics = "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy"
+    topBarUploadFileButtonClicked();
+}
 ////////////////////////////////////////////////////////
 
-var developerTools = false;
+// //saves progress in cookie
+// function saveProgress() {
+//     //delete existing cookies
+//     deleteAllCookies()
+//     //convert lyricsLines and timeStamps top byte representation
+
+//     //create new cookie which expires in a week
+//     //save timeStamps and lyricsLines
+//     document.cookie = `lyricsLines=${convertStringArrayToByte(lyricsLines)};timeStamps=${convertStringArrayToByte(timeStamps)};max-age=${60*60*24*7};`;
+// }
+
+// //retreives cookies stored
+// function retreiveCokie() {
+//     cookieArray = document.cookie.split(";");
+//     console.log(cookieArray);
+// }
+
+// function deleteAllCookies() {
+//     const cookies = document.cookie.split(";");
+
+//     for (let i = 0; i < cookies.length; i++) {
+//         const cookie = cookies[i];
+//         const eqPos = cookie.indexOf("=");
+//         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+//         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+//     }
+// }
+
+// //comverts array to byte representation
+// function convertStringArrayToByte(array) {
+//     let utf8Encode = new TextEncoder();
+//     //array to pass our encoded stuff into
+//     let encodedStringArray = [];
+//     //for each element in array
+//     for (let i = 0; i < array.length; i++) {
+//         //add encoded line to encodedStringArray
+//         encodedStringArray.push(utf8Encode.encode(array[i]));
+//     }
+//     let stringRepresentation = "";
+//     for (let i = 0; i < encodedStringArray.length; i++) {
+//         stringRepresentation += encodedStringArray[i] + "    |    " ;
+//     }
+//     return stringRepresentation;
+// }
+
+// function convertByteToStringArray(stringRepresentation) {
+//     try {
+//         let stringRepArray = stringRepresentation.split("    |    ");
+//         let utf8Decode = new TextDecoder();
+//         let decoded = [];
+//         for (let i = 0; i < stringRepArray.length; i++) {
+//             //create array buffer of size stringRepArray[i].length
+//             let ab = new Uint8Array(stringRepArray[i].length);
+//             for (let j = 0; j < stringRepArray[i].length; j++) {
+//                 ab[j] = stringRepArray[i].split(",")[j];
+//             }
+//             //clean the array of \u0000 
+//             let uncleanedString = utf8Decode.decode(ab);
+//             let indexOfClutter = uncleanedString.indexOf("\u0000");
+//             uncleanedString = uncleanedString.substring(0, indexOfClutter);
+//             console.log(uncleanedString);
+//             decoded.push();
+//         }
+//         return decoded;
+//     } catch (error) {
+//         console.error(error);
+//         return -1;
+//     }
+// }
