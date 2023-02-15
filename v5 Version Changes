@@ -1,5 +1,11 @@
+======V5 CHANGES=======
+-Added ability to add and delete lines
+-Removed all Alert() functions except the help ones
+-Added visual warnings to Artist name and Song name inputs to warn user visually they are not complete
+-Fixed bug where user is able to get onto Sync Lyrics screen even if they had not uploaded a music file
+-More minor changes
+======V4 CHANGES======
 Complete overhaul of the code to make it easier to read and change
-
 New Features:
     Added ability to edit lines on the syncing screen instead of having to 
         back to first screen which makes you loose all your progress
