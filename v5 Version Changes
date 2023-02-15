@@ -1,3 +1,9 @@
+======V5.2 CHANGES=======
+Quality of life update
+- Metadata is automatically fetched using jsmediatags.js from the uploaded music file and autofilled into artistName, songName and artistName input fields
+- App now prevents user from generating a file if not all lines are synced
+- Fixed bug where Warning/Hints popup wasn't showing up on Firefox
+- More minor improvements and fixes
 ======V5 CHANGES=======
 -Added ability to add and delete lines
 -Removed all Alert() functions except the help ones
