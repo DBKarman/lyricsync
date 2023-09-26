@@ -918,7 +918,7 @@ function finishItOff() {
     if (albumName != "") {completed += "[al: " + albumName + "]\n";}
     completed += "[ti: " + songName + "]\n";
     completed += "[tool: github-DBKarman-Lyricsync]\n";
-    completed += "[length: "+ convertTimeToLrcFileFormat(audio.duration) +"\n\n";
+    completed += "[length: "+ convertTimeToLrcFileFormat(audio.duration) +"]\n\n";
     while (i < lyricsLines.length) {
         //verifies time stamp, if timeStamps[i] == "NaN" returns 0, else returns timeStamps[i]
         completed += "["+convertTimeToLrcFileFormat(timeStampsVerify(timeStamps[i])) + " " + lyricsLines[i] + "\n" 
