@@ -964,7 +964,7 @@ function formatTimeTommssms(time) {
 
 // Offsets the time as specified by the user
 function getTimeOffset() {
-    return -$("#cogPopupSelectTimeOffset").val();
+    return -1 * document.getElementById("cogPopupSelectTimeOffset").value;
 }
 
 //is displayWarning already displaying
@@ -1435,17 +1435,18 @@ let developerTools = false;
 //DEVELOPER OPTIONS REMOVE WHEN FINISHED
 ////////////////////////////////////////////////////////
 if (developerTools == true) {
-    whatScreenIsUserCurrentlyOn = 4;
+    whatScreenIsUserCurrentlyOn = 3;
     isTopBarButtonAccessible[0] = true;
     isTopBarButtonAccessible[1] = true;
     isTopBarButtonAccessible[2] = true;
-    isTopBarButtonAccessible[3] = true;
+    isTopBarButtonAccessible[3] = false;
     // hideScreen1();
     // hideScreen2();
     // hideScreen3();
     // showScreen4();
     var testLyrics =
     "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy";
+    $("#lyricsTextArea").val(testLyrics);
     topBarSongInfoButtonClicked();
-    $("#topBarSyncLinesButton").click();
+    //$("#topBarSyncLinesButton").click();
 }
