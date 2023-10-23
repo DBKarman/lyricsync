@@ -35,8 +35,6 @@
             </span>
         </div>
 
-        <div id="topBarSettingsPopup"></div>
-
         <!-- 1ST SCREEN -->
         <main id="enterLyricsScreen">
             <textarea id="lyricsTextArea" rows="5"></textarea>
@@ -44,7 +42,7 @@
                 <p>
                     Under
                     <a
-                        class="licenceLink"
+                        class="licenceLink noselect"
                         href="https://docs.google.com/document/d/1LDd1bxplYppT2zwCSnVgR--dJZhqC3MEKt6Auwc-UXU/edit?usp=sharing"
                         target="_blank"
                         >MIT</a
@@ -59,7 +57,7 @@
 
             <p>
                 Select the audio file you want to synchronize the lyrics with,
-                <span id="supportedFormatsHelp">
+                <span id="supportedFormatsHelp" class="noselect">
                     supported formats & browsers
                 </span>
             </p>
@@ -167,18 +165,18 @@
             </span>
 
             <span id="controlsConainer">
-                <span id="syncButton" class="audioButton">Sync Line</span>
+                <span id="syncButton" class="audioButton noselect">Sync Line</span>
                 <span id="mainControls">
                     <span id="audioControlButtonPara">
-                        <span id="backwardButton" class="audioButton"
+                        <span id="backwardButton" class="audioButton noselect"
                             >-10s</span
                         >
-                        <span id="playButton" class="audioButton">Play</span>
-                        <span id="forwardButton" class="audioButton">+10s</span>
+                        <span id="playButton" class="audioButton noselect">Play</span>
+                        <span id="forwardButton" class="audioButton noselect">+10s</span>
                     </span>
                     <span id="audioControlsP">
-                        <span id="hintsButton" class="audioButton">HELP</span>
-                        <span id="timeDisplay">0:00</span>
+                        <span id="hintsButton" class="audioButton noselect">HELP</span>
+                        <span id="timeDisplay" class="noselect">0:00</span>
                         <input
                             type="range"
                             class="audioButton"
@@ -190,7 +188,7 @@
                         />
                     </span>
                 </span>
-                <span id="GenerateFileButton" class="audioButton"
+                <span id="GenerateFileButton" class="audioButton noselect"
                     >Generate File
                 </span>
             </span>
@@ -198,8 +196,8 @@
 
         <div id="WarningBox"></div>
 
-        <!-- Metadata fetching library -->
         <script src="javascript.js"></script>
+        <!-- Metadata fetching library -->
         <script src="jsmediatags.js"></script>
     </body>
 </html>

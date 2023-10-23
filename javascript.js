@@ -1,24 +1,27 @@
+//East access document.getElementById()
 const j$ = (id) => {
     return document.getElementById(id);
 };
 
+//on page load trigger ResizeEvent();
 addEventListener("load", (event) => {
     ResizeEvent();
 });
-//on window resize the lyricsTextArea height is changed because css cant do it for some reason
+//on window resize, trigger ResizeEvent();
 addEventListener("resize", (event) => {
     ResizeEvent();
 });
 function ResizeEvent() {
     //Triggered when window loads or when resized
+
+
     //resize text area height
     $("#lyricsTextArea").css("height", window.innerHeight - 55 + "px");
 
     //resize topBarButtonsSpan width to window.InnterWidth - 170px
     $("#topBar").css("width", window.innerWidth - 10 + "px");
 
-
-
+    //if window width is less than 580px
     if (window.innerWidth <= 580) {
         //the words cant fit anymore so change them to numbers
         j$("topBarEntryLyricsButton").innerHTML = "1";
@@ -35,21 +38,28 @@ function ResizeEvent() {
     //Changes width of the topBarButtonsSpan when they no longer fit
     if (window.innerWidth <= 768) {
         //(window.innerWidth - 10) / 4 - (padding + margin)
-        $(".topBarButton").css("width", $("#topBar").css("width").slice(0, -2) / 4 - 9 + "px");
+        $(".topBarButton").css(
+            "width",
+            $("#topBar").css("width").slice(0, -2) / 4 - 9 + "px"
+        );
     } else {
         $(".topBarButton").css("width", "auto");
     }
 
-
     if (window.innerWidth <= 659) {
+        $("#songInfoScreen").css("width", window.innerWidth - 20 + "px");
         $("#controlsConainer").css("width", window.innerWidth + "px");
-        $("#syncButton").css("width", window.innerWidth)
+        $("#syncButton").css("width", window.innerWidth);
         //$("#GenerateFileButton").css("width", window.innerWidth)
-        $("#mainControls").css("margin", "0 " + ((window.innerWidth - 376 ) / 2) + "px");
+        $("#mainControls").css(
+            "margin",
+            "0 " + (window.innerWidth - 376) / 2 + "px"
+        );
         //$("#mainControls").css("width", window.innerWidth + "px");
     } else {
+        $("#songInfoScreen").css("width", "194px");
         $("#controlsConainer").css("width", "659px");
-        $("#syncButton").css("width", "130px")
+        $("#syncButton").css("width", "130px");
         //$("#GenerateFileButton").css("width", "130px")
         $("#mainControls").css("margin", "auto");
         //$("#mainControls").css("width", "390px");
@@ -82,6 +92,8 @@ function highlightTopBarButton(dehighlightOrHighlight, buttonId) {
         );
     }
 
+    //bit of a *bad* system to highlight and dehighlight but this project is basically dead 
+    //and rolls in the grave once every 6 months. so i cant be bothered fixing it :/
     if (dehighlightOrHighlight == "highlight") {
         $("#" + buttonId).css("border-bottom", "5px solid #2874ed");
         $("#" + buttonId).css("border-bottom-left-radius", "0em");
@@ -105,7 +117,6 @@ highlightTopBarButton("highlight", "topBarEntryLyricsButton");
 
 //just a tracker to keep track of what screen the user is on, set to 1 because thats the sreen the user is on at the start
 let whatScreenIsUserCurrentlyOn = 1;
-
 
 //if the user revisits the first tab then reset the synced lyrics
 revisitedFirstTab = true;
@@ -237,7 +248,10 @@ function showScreen4() {
 
 function topBarUploadFileButtonClicked() {
     //check whether the user is allowed to click it
-    if (isTopBarButtonAccessible[1] == true || $("#lyricsTextArea").val().length > 0) {
+    if (
+        isTopBarButtonAccessible[1] == true ||
+        $("#lyricsTextArea").val().length > 0
+    ) {
         //(red) dehighlight al buttons
         redHighlightTopBarButton("dehighlight", "topBarEntryLyricsButton");
         redHighlightTopBarButton("dehighlight", "topBarUploadFileButton");
@@ -261,10 +275,6 @@ function topBarUploadFileButtonClicked() {
         showScreen2();
         hideScreen3();
         hideScreen4();
-
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
     }
 }
 
@@ -273,13 +283,14 @@ $("#topBarUploadFileButton").click(() => {
     topBarUploadFileButtonClicked();
 });
 
-autofilled = false;
-
+//gobal variable. used to warn user that JSMediaTags automatically read and autofilled the song name and artist name
+let autofilled = false;
 //when the user successfully uploads a file into the fileSelector
 j$("fileSelector").addEventListener("change", (event) => {
     //loads the file from fileSelector to audioPlayback
     files = event.target.files;
 
+    //JSMediaTags is used to read metadata from the file
     const jsmediatags = window.jsmediatags;
     //try to read metadata to retrieve artist name and song name
     console.log("triggered read metadata");
@@ -303,7 +314,8 @@ j$("fileSelector").addEventListener("change", (event) => {
             }
         },
         onError: function (error) {
-            console.error(error);
+            console.error("JSMediaTag exception:");
+            console.log(error);
         },
     });
 
@@ -316,10 +328,12 @@ j$("fileSelector").addEventListener("change", (event) => {
     isTopBarButtonAccessible[2] = true;
 });
 
+//when the user clicks on the Song Info button,
 j$("topBarSongInfoButton").addEventListener("click", (event) => {
     topBarSongInfoButtonClicked();
 });
 
+//Only trigger JSMediaTags autofill warning once. DOES NOT DISABLE JSMEDIATAGS
 triggeredShowinbgOffJSMEdiaTags = false;
 function topBarSongInfoButtonClicked() {
     //check whether the user is allowed to click it
@@ -362,7 +376,7 @@ function topBarSongInfoButtonClicked() {
         if (blipNextTimeUserVisitsSongInformationTab[0] == true) {
             blipNextTimeUserVisitsSongInformationTab[0] = false;
             WarnUserToFillOutField("SongNameInput");
-        } 
+        }
         if (blipNextTimeUserVisitsSongInformationTab[1] == true) {
             blipNextTimeUserVisitsSongInformationTab[1] = false;
             WarnUserToFillOutField("ArtistNameInput");
@@ -370,23 +384,24 @@ function topBarSongInfoButtonClicked() {
     }
 }
 
+//Checks if the required fields have been filled in
 async function IsSongInfoEntered() {
     allInfoEntered = true;
     if ($("#SongNameInput").val() == "") {
         allInfoEntered = false;
-    } if ($("#ArtistNameInput").val() == "") {
+    }
+    if ($("#ArtistNameInput").val() == "") {
         allInfoEntered = false;
     }
 
     if (allInfoEntered == true) {
-        isTopBarButtonAccessible[3] = true
+        isTopBarButtonAccessible[3] = true;
     }
 }
 
 previousLyricsEntered = "9832nfqrhgq39g33t$%£$%";
 //run when the topBarSyncLinesButton button is clicked
 function topBarSyncLinesButtonClicked() {
-
     IsSongInfoEntered();
 
     //check whether the user is allowed to click it
@@ -424,7 +439,6 @@ function topBarSyncLinesButtonClicked() {
             assignLyricsToLinesInTable();
             //we want to start off with the first element so
             tableLineClicked(0);
-
         }
         //determines whether the user is syncing or previewing
         beginUserSyncingLinesIntrival();
@@ -803,7 +817,7 @@ function syncLine() {
     }
 }
 
-//
+//resets all the timestamps after the selected element
 function resetAllTimestampsAfer(rowId) {
     //console.log("reset timestamp elements starting at " + i);
     //get the timeStamo of rowId
@@ -861,6 +875,7 @@ function beginUserSyncingLinesIntrival() {
     }, 200);
 }
 
+//Allows the user to preview the syncing they have done
 function highlightPreviewingLines() {
     //if the length of the timeStamps array is less than 3 errors occure so dont do anything
     if (timeStamps.length <= 2) {
@@ -1028,9 +1043,18 @@ rangeBar.addEventListener("mousedown", () => {
     console.log("playbackBarUpdateClearance revoked");
 });
 rangeBar.addEventListener("mouseup", () => {
-    playbackBarUpdateClearance = true;
     //on mouseup it sets the time stamp to the chosen time
     audio.currentTime = (rangeBar.value / 1000) * audio.duration;
+    playbackBarUpdateClearance = true;
+});
+rangeBar.addEventListener("touchstart", function () {
+    playbackBarUpdateClearance = false;
+    console.log("playbackBarUpdateClearance revoked (mobile)");
+});
+rangeBar.addEventListener("touchend", function () {
+    audio.currentTime = (rangeBar.value / 1000) * audio.duration;
+    playbackBarUpdateClearance = true;
+    console.log("playbackBarUpdateClearance granted (mobile)");
 });
 
 //controls the audio with the audio slider
@@ -1121,7 +1145,7 @@ let allowedToFinishItOff = () => {
     }
     if ($("#SongNameInput").val() == "") {
         displayWarning(
-            "Please enter the song name, the field is located inside the \"Song Information tab\".",
+            'Please enter the song name, the field is located inside the "Song Information tab".',
             4000,
             "default",
             "default"
@@ -1133,7 +1157,7 @@ let allowedToFinishItOff = () => {
     }
     if ($("#ArtistNameInput").val() == "") {
         displayWarning(
-            "Please enter the artist's name, the field is located inside the \"Song Information tab\".",
+            'Please enter the artist\'s name, the field is located inside the "Song Information tab".',
             4000,
             "default",
             "default"
@@ -1445,7 +1469,7 @@ if (developerTools == true) {
     // hideScreen3();
     // showScreen4();
     var testLyrics =
-    "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy";
+        "Hundred thousand for the chain and now my drop (Drop, drop)\nWhen I pull out the garage, I chop my top (Top, top)\nJust like a fiend, when I start I cannot stop (Wow)\nI got, I got hella guap, look at me now (At me now)\nOoh, covered in carats\nOoh, mahogany cabinets\nOoh, I ball like the Mavericks\nOoh, stable and stallions\nOoh, massive medallions\nOoh, I finally had it\nOoh, but then you just vanished\nDamn, I thought I was savage\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nBuy me, love, try to buy me, love\nNow I'm alone, Ice Box, Omarion (Ooh)\nPlenty sluts grabbin' on my nuts (Woah!)\nMight have fucked, it was only lust Trust)\nI was livin' life, how could I have known? (Could have known)\nCouldn't listen to advise, 'cause I'm never wrong (Oh)\nIn the spotlight, but I'm on my own (Oh)\nNow that you're gone (Now that you're gone)\nAll this stuntin' couldn't satisfy my soul (–oul)\nGot a hundred big places, but I'm still alone (–one)\nAyy, I would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away\nI just keep on wishin' that the money made you stay\nPrice went up, my price went up, we went our separate ways\nI just keep on wishin' that the money made you stay, ayy, ayy\nI don't even wanna go home\nIn a big house all alone (Alone)\nI don't even wanna go home (No, no, no)\nBut I'ma try to call you on the phone\n(Brrt!)\nI would throw it all away\nI just keep on wishin' that the money made you stay\nYou ain't never cared about that bullshit anyway\nI just keep on wishin' that the money made you stay, ayy\nYou know I would throw it all away (All away)\nI just keep on wishin' that the money made you stay (Made you stay)\nPrice went up, my price went up\nWe went our separate ways (Separate ways)\nI just keep on wishin' that the money made you stay, ayy, ayy";
     $("#lyricsTextArea").val(testLyrics);
     topBarSongInfoButtonClicked();
     //$("#topBarSyncLinesButton").click();

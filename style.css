@@ -1,13 +1,33 @@
-html body {
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+/*
+.container::-webkit-scrollbar {
+    display: none;
+}
+.container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+*/
+
+body {
     font-family: BentonSans, sans-serif;
     background-color: #131417;
     color: #ffffff;
     min-width: 376px;
     margin: 0px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 body::-webkit-scrollbar {
-    /* background: #131417; */
-    width: 0;
+    display: none;
 }
 
 #topBar {

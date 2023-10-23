@@ -1,3 +1,8 @@
+======V5.3.2 CHANGES=======
+- Fixed scrolling issue
+- Fixed mobile touchscreen not being able to adjust the time of song
+======V5.3.1 CHANGES=======
+- Added the option to change time offset back in
 ======V5.3 CHANGES=======
 - Major overhaul to mobile display support. Stable up to a minimum width of 376px
 - Moved the song information inputs onto dedicated screen in order to allow for the callapse of the top-bar for mobile-display support
