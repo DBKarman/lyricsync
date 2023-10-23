@@ -1,70 +1,8 @@
-@media only screen and (max-width: 479px) {
-  body {
-    height: 100% !important;
-    font-size: 1.5rem !important;
-  }
-
-  #topBarButtonsDiv {
-    position: sticky !important;
-    display: block !important;
-    float: left !important;
-    width: 100% !important;
-    background-color: #000000 !important;
-  }
-
-  #lyricsTextArea::placeholder {
-    font-size: 2rem !important;
-  }
-
-  .licence {
-    position: absolute !important;
-    right: 0px !important;
-    top: 0px !important;
-    font-size: 0.8rem !important;
-  }
-
-  #topBar {
-    height: 5rem !important;
-    width: 100% !important;
-  }
-
-  #uploadFileScreen {
-    margin: 6% 0 0 0 !important;
-    border-radius: 0 !important;
-    padding: 2rem !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  #controlsConainer {
-    font-size: 1.2rem !important;
-  }
-
-  #syncButton {
-    display: block !important;
-    height: 100px !important;
-    width: 100% !important;
-    margin: 5px 0 5px 0 !important;
-    text-align: center !important;
-  }
-
-  #GenerateFileButton {
-    display: inline-block !important;
-    width: 25% !important;
-    position: relative !important;
-    bottom: 24px  !important;
-  }
-}
-
-.hidden {
-    display: none;
-}
-
 html body {
     font-family: BentonSans, sans-serif;
     background-color: #131417;
     color: #ffffff;
-    min-width: 865px;
+    min-width: 376px;
     margin: 0px;
 }
 body::-webkit-scrollbar {
@@ -74,7 +12,7 @@ body::-webkit-scrollbar {
 
 #topBar {
     background-color: #000000;
-    min-height: 50px;
+    min-height: 45px;
     margin: 0px;
     border-bottom: 0px solid #ffffff;
     padding: 5px;
@@ -85,12 +23,11 @@ body::-webkit-scrollbar {
 }
 
 #logoHeader {
-    margin: 10px 4px 5px 5px;
+    padding: 5px 5px 5px 5px;
     text-align: left;
-    width: fit-content;
+    width: 150px;
     display: inline;
 }
-
 
 .topBarTextInput {
     background-color: inherit;
@@ -114,14 +51,22 @@ body::-webkit-scrollbar {
     outline-offset: 0px;
     outline: none;
 }
+/* #topBarButtonsDiv {
+    width: 454px;
+    float: right;
+} */
 
-
-#topBarButtonsDiv {
-    width: 424px;
+#topBarButtonsSpan {
+    margin: 0px 10px;
+    width: fit-content;
+    box-sizing: border-box;
+    padding: 0px 10px;
+    display: block;
     float: right;
 }
 
 .topBarButton {
+    max-height: 45px;
     background-color: inherit;
     border: 0px solid #ffffff;
     margin: 0;
@@ -129,16 +74,17 @@ body::-webkit-scrollbar {
     color: #22b9e3;
     font-size: 100%;
     border-radius: 0.5em;
-    margin: 0 1.5%;
-    align-items: right;
 }
 .topBarButton:hover {
     background-color: #2874ed;
     cursor: pointer;
 }
 
+#topBarSettings {
+    display: none;
+}
 
-#enterLyricsScreen textarea { 
+#enterLyricsScreen textarea {
     background-color: #2f3335;
     overflow: visible;
     resize: none;
@@ -187,7 +133,7 @@ body::-webkit-scrollbar {
 
 #uploadFileScreen {
     display: none;
-    background-color: #2E3132;
+    background-color: #2e3132;
     width: 67%;
     margin: 5px auto;
     border-radius: 0.5em;
@@ -206,12 +152,38 @@ body::-webkit-scrollbar {
     width: 0;
 }
 
+/*=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=*/ /*=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=*/
 
+#songInfoScreen {
+    display: none;
+    background-color: #2e3132;
+    width: 194px;
+    margin: 5px auto;
+    border-radius: 0.5em;
+    padding: 13px;
+}
 
+.SongInfoTextInputParagraph {
+    width: 100%;
+}
+
+.SongInfoTextInput {
+    width: 175px;
+    display: inline-block;
+    background-color: inherit;
+    border: 0px solid #22b9e3;
+    align-items: center;
+    margin: 7px;
+    height: 25px;
+    color: #22b9e3;
+    font-size: 100%;
+}
+
+/*=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=*/ /*=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=/=*/
 
 #syncLyricsScreen {
     display: none;
-    background-color: #1F2839;
+    background-color: #1f2839;
     width: 100%;
     height: 85%;
     margin: 5px auto;
@@ -226,7 +198,7 @@ body::-webkit-scrollbar {
 #audioPlayerBar {
     display: none;
     position: sticky;
-    min-width: 770px;
+    min-width: 0;
     bottom: 0;
     z-index: 99;
     width: 100%;
@@ -269,7 +241,6 @@ body::-webkit-scrollbar {
 .audioControlButton:hover {
     cursor: pointer;
 }
-
 
 #mainControls {
     display: inline-block;
@@ -342,23 +313,21 @@ body::-webkit-scrollbar {
     background-color: #49fc7c;
     color: #000000;
     display: inline-flex;
+    width: 130px;
+
     position: relative;
     bottom: 13px;
-    width: 130px;
     height: 50px;
     right: 20px;
     border-radius: 0.3em;
     font-size: 130%;
 }
 
-
-
-
 .tableRowBackgroundColour0 {
-    background-color: #323C50;
+    background-color: #323c50;
 }
 .tableRowBackgroundColour1 {
-    background-color: #2C3346;
+    background-color: #2c3346;
 }
 
 #tableTimeColumn0 {
@@ -382,7 +351,6 @@ body::-webkit-scrollbar {
     border-bottom: 2px solid #000000;
     padding: 10px;
 }
-
 
 #WarningBox {
     display: block;
@@ -408,7 +376,7 @@ body::-webkit-scrollbar {
     position: absolute;
     top: 70px;
     right: 10px;
-    background-color: #1F2839;
+    background-color: #1f2839;
     border-radius: 1em;
     padding: 15px;
     width: 150px;
@@ -428,7 +396,7 @@ body::-webkit-scrollbar {
 
 #cogPopupSelectTimeOffset {
     color: #ffffff;
-    background-color: #323C50;
+    background-color: #323c50;
     padding: 4px;
     border-radius: 0.4em;
 }
@@ -467,4 +435,119 @@ body::-webkit-scrollbar {
 
 .tableEditButtonColumnClass:hover {
     background-color: rgb(40, 116, 237);
+}
+
+/* To accomidate the top bar */
+@media (max-width: 768px) {
+    #logoHeader {
+        display: none;
+    }
+
+    #topBarButtonsSpan {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0px 10px;
+        margin: 0;
+        padding: 0, 5px;
+    }
+}
+
+/* To accomidate the sync button */
+@media (max-width: 659px) {
+    
+    html body {
+        background-color: #2E3132;
+    }
+
+    #uploadFileScreen {
+        margin: 0;
+        border-radius: 0;
+        border-width: 0;
+        padding: 10px;
+        width: 100%;
+        height: auto;
+    }
+
+    #songInfoScreen {
+        margin: 0;
+        border-radius: 0;
+        border-width: 0;
+        padding: 10px;
+        width: 100%;
+        height: auto;
+    }
+
+    .SongInfoTextInput {
+        border-bottom-width: 1px;
+    }
+
+    
+    #audioPlayerBar {
+        margin: 0;
+        width: 100%;
+        padding: 0;
+    }
+
+    #controlsConainer {
+        display: block;
+        height: 128px;
+    }
+
+    /* The whole controls container */
+    #mainControls {
+        width: 376px;
+    }
+
+    /* The top row of the controls container*/
+    #audioControlButtonPara {
+        display: block;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    #syncButton {
+        display: block;
+        margin: 7px 0 0 0;
+        border-radius: 0;
+        padding: 5px 0 0 0;
+        text-align: center;
+        height: 39px;
+    }
+
+    /*.topBarButton {
+         SET IN JS; Width: (avalible width-10) / 4 - (padding + margin) 
+    }*/
+
+    #GenerateFileButton {
+        display: block;
+        position: auto;
+        padding: 5px 0;
+        height: 20px;
+        width: 100%;
+        margin-top: 5px;
+
+        bottom: 0;
+        right: 0;
+        
+        
+        text-align: center;
+        border-radius: 0;
+    }
+
+    
+}
+
+/* Styles for tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* CSS rules for tablets go here */
+}
+
+/* Styles for desktops */
+@media (min-width: 1025px) {
+    /* CSS rules for desktops go here */
+}
+
+.hidden {
+    display: none;
 }

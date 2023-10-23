@@ -1,83 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="google-site-verification"
+            content="agrQ9dIW2IbFZfmnE1eSSz74bgLgNhQ2-eat7HYI1Nw"
+        />
+        <title>lrc Generator/Creator | Lyricsync</title>
+        <script src="jquery.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="agrQ9dIW2IbFZfmnE1eSSz74bgLgNhQ2-eat7HYI1Nw" />
-    <title>lrc Generator/Creator | Lyricsync</title>
-    <script src="jquery.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-    <div id="topBar">
-        <h1 id="logoHeader">Lyricsync</h1>
-        <input class="topBarTextInput" type="text" placeholder="Song Name" id="topBarSongNameInput">
-        <input class="topBarTextInput" type="text" placeholder="Artist Name" id="topBarArtistNameInput">
-        <input class="topBarTextInput" type="text" placeholder="Album Name" id="topBarAlbumNameInput">
-        <div id="topBarButtonsDiv">
-            <button class="topBarButton" id="topBarEntryLyricsButton">
-                Enter Lyrics
-            </button>
-            <button class="topBarButton" id="topBarUploadFileButton">
-                Upload File
-            </button>
-            <button class="topBarButton" id="topBarSyncLinesButton">
-                Synchronize Lines
-            </button>
-            <button class="topBarButton" id="topBarSettings">
-                <img id="cogIcon" src="cog-icon.png" alt="">
-            </button>
-        </div>
-    </div>
-
-    <div id="topBarSettingsPopup" class="hidden">
-        <span id="cogPopupCloseX"><span id="cogPopupXX">X</span></span>
-        <label for="timeOffset">Adjust time offset:</label>
-        <select name="timeOffset" id="cogPopupSelectTimeOffset">
-            <option value="0">-0.000s</option>
-            <option value="0.050">-0.050s</option>
-            <option value="0.100">-0.100s</option>
-            <option value="0.150" selected>-0.150s</option>
-            <option value="0.200">-0.200s</option>
-            <option value="0.250">-0.250s</option>
-            <option value="0.300">-0.300s</option>
-            <option value="0.350">-0.350s</option>
-            <option value="0.400">-0.400s</option>
-            <option value="0.450">-0.450s</option>
-            <option value="0.500">-0.500s</option>
-        </select>
-    </div>
-
-
-
-    <main id="enterLyricsScreen">
-        <textarea id="lyricsTextArea" rows="5"></textarea>
-        <span class="licence">
-            <p>Under 
-            <a class="licenceLink" href="https://docs.google.com/document/d/1LDd1bxplYppT2zwCSnVgR--dJZhqC3MEKt6Auwc-UXU/edit?usp=sharing" target="_blank">MIT</a> 
-            licence</p>
-        </span>
-    </main>
-    
-    
-    
-    <main id="uploadFileScreen" class="hidden">
-        
-        <h2>Upload File</h2>
-        
-        <p>
-            Select the audio file you want to synchronize the lyrics with,
-            <span id="supportedFormatsHelp">
-                supported formats & browsers
+    <body>
+        <div id="topBar">
+            <h1 id="logoHeader">Lyricsync</h1>
+            <span id="topBarButtonsSpan">
+                <button class="topBarButton" id="topBarEntryLyricsButton">
+                    Enter Lyrics
+                </button>
+                <button class="topBarButton" id="topBarUploadFileButton">
+                    Upload File
+                </button>
+                <button class="topBarButton" id="topBarSongInfoButton">
+                    Song Info
+                </button>
+                <button class="topBarButton" id="topBarSyncLinesButton">
+                    Synchronise Lines
+                </button>
+                <button class="topBarButton" id="topBarSettings">
+                    <img id="cogIcon" src="cog-icon.png" alt="" />
+                </button>
             </span>
-        </p>
-        
-        Drag and Drop a file or click:
-        <input id="fileSelector" type="file" accept="   
+        </div>
+
+        <div id="topBarSettingsPopup" class="hidden">
+            <span id="cogPopupCloseX"><span id="cogPopupXX">X</span></span>
+            <label for="timeOffset">Adjust time offset:</label>
+            <select name="timeOffset" id="cogPopupSelectTimeOffset">
+                <option value="0">-0.000s</option>
+                <option value="0.050">-0.050s</option>
+                <option value="0.100">-0.100s</option>
+                <option value="0.150" selected>-0.150s</option>
+                <option value="0.200">-0.200s</option>
+                <option value="0.250">-0.250s</option>
+                <option value="0.300">-0.300s</option>
+                <option value="0.350">-0.350s</option>
+                <option value="0.400">-0.400s</option>
+                <option value="0.450">-0.450s</option>
+                <option value="0.500">-0.500s</option>
+            </select>
+        </div>
+
+        <!-- 1ST SCREEN -->
+        <main id="enterLyricsScreen">
+            <textarea id="lyricsTextArea" rows="5"></textarea>
+            <span class="licence">
+                <p>
+                    Under
+                    <a
+                        class="licenceLink"
+                        href="https://docs.google.com/document/d/1LDd1bxplYppT2zwCSnVgR--dJZhqC3MEKt6Auwc-UXU/edit?usp=sharing"
+                        target="_blank"
+                        >MIT</a
+                    >
+                    licence
+                </p>
+            </span>
+        </main>
+
+        <main id="uploadFileScreen" class="hidden">
+            <h2>Upload File</h2>
+
+            <p>
+                Select the audio file you want to synchronize the lyrics with,
+                <span id="supportedFormatsHelp">
+                    supported formats & browsers
+                </span>
+            </p>
+
+            Drag and Drop a file or click:
+            <input
+                id="fileSelector"
+                type="file"
+                accept="   
         audio/wav,
         audio/mp4,
         audio/mpeg, 
@@ -85,18 +92,45 @@
         audio/aac,
         audio/aacp,
         audio/ogg,
-        ">
-        <span class="licence">Under <a class="licenceLink" href="/Licence">MIT</a> licence</span>
-    </main>
-    
-    
-    
-    
-    
-    <main id="syncLyricsScreen" class="hidden">
-        
-        <table id="lyricsTable">
-            <!-- <tr>
+        "
+            />
+            <span class="licence"
+                >Under
+                <a class="licenceLink" href="/Licence">MIT</a> licence</span
+            >
+        </main>
+
+        <main id="songInfoScreen">
+            <h2>Enter song information</h2>
+            <p class="SongInfoTextInputParagraph">
+                <input
+                    type="text"
+                    class="SongInfoTextInput"
+                    id="SongNameInput"
+                    placeholder="Song Name"
+                />
+            </p>
+            <p class="SongInfoTextInputParagraph">
+                <input
+                    type="text"
+                    class="SongInfoTextInput"
+                    id="ArtistNameInput"
+                    placeholder="Artist Name"
+                />
+            </p>
+            <p class="SongInfoTextInputParagraph">
+                <input
+                    type="text"
+                    class="SongInfoTextInput"
+                    id="AlbumNameInput"
+                    placeholder="Album Name"
+                />
+            </p>
+        </main>
+
+        <main id="syncLyricsScreen" class="hidden">
+            <table id="lyricsTable">
+                <!-- <tr>
                 <td>0:00</td>
                 <td>Lyr</td>
             </tr>
@@ -108,53 +142,64 @@
                 <td>6:54</td>
                 <td>Lyr</td>
             </tr> -->
-        </table>
-    </main>
+            </table>
+        </main>
 
+        <div id="audioPlayerBar" class="hidden">
+            <span class="licence"
+                >Under
+                <a class="licenceLink" href="/Licence">MIT</a> licence</span
+            >
 
-    <div id="audioPlayerBar" class="hidden">
-        <span class="licence">Under <a class="licenceLink" href="/Licence">MIT</a> licence</span>
-        
-        
-        <audio id="audioPlayback" autostart=false loop=false>
-            <source src="" id="audioPlaybackAudioSourceID" />
-            Your browser does not support Lyricsync.
-        </audio>
+            <audio id="audioPlayback" autostart="false" loop="false">
+                <source src="" id="audioPlaybackAudioSourceID" />
+                Your browser does not support Lyricsync.
+            </audio>
 
-        
-        <span id="audioPlaybackBarSpan">
-            <input type="range" id="audioPlaybackBar" step="1"
-            min="0" max="1000">
-        </span>
-        
-        
-        <p id="controlsConainer">
-            <span class="audioButton " id="syncButton">Sync Line</span>
-            <span id="mainControls">
-                <span id="audioControlButtonPara">
-                    <span id="backwardButton" class=" audioButton">-10s</span>
-                    <span id="playButton" class="audioButton">Play</span>
-                    <span id="forwardButton" class="audioButton">+10s</span>
+            <span id="audioPlaybackBarSpan">
+                <input
+                    type="range"
+                    id="audioPlaybackBar"
+                    step="1"
+                    min="0"
+                    max="1000"
+                />
+            </span>
+
+            <span id="controlsConainer">
+                <span id="syncButton" class="audioButton">Sync Line</span>
+                <span id="mainControls">
+                    <span id="audioControlButtonPara">
+                        <span id="backwardButton" class="audioButton"
+                            >-10s</span
+                        >
+                        <span id="playButton" class="audioButton">Play</span>
+                        <span id="forwardButton" class="audioButton">+10s</span>
+                    </span>
+                    <span id="audioControlsP">
+                        <span id="hintsButton" class="audioButton">HELP</span>
+                        <span id="timeDisplay">0:00</span>
+                        <input
+                            type="range"
+                            class="audioButton"
+                            id="volumeSlider"
+                            step="1"
+                            class=""
+                            min="0"
+                            max="50"
+                        />
+                    </span>
                 </span>
-                <span id="audioControlsP">
-                    <span id="hintsButton" class="audioButton ">HELP</span>
-                    <span id="timeDisplay">0:00</span>
-                    <input type="range" class="audioButton" id="volumeSlider" step="1" class="" min="0" max="50">
+                <span id="GenerateFileButton" class="audioButton"
+                    >Generate File
                 </span>
             </span>
-            <span id="GenerateFileButton" class="audioButton">Generate File</span>
-        </p>
+        </div>
 
-        
-    </div>
+        <div id="WarningBox"></div>
 
-    <div id="WarningBox">
-        
-    </div>
-    
-    <!-- Metadata fetching library -->
-    <script src="javascript.js"></script>
-    <script src="jsmediatags.js"></script>
-</body>
-
+        <!-- Metadata fetching library -->
+        <script src="javascript.js"></script>
+        <script src="jsmediatags.js"></script>
+    </body>
 </html>
