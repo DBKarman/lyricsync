@@ -1187,7 +1187,18 @@ let isTimeStampsValid = () => {
     return true;
 };
 
+function detectFirefoxMobile() {
+    var userAgent = navigator.userAgent.toLowerCase();
+    return /android.+firefox\//.test(userAgent);
+}
+
 function finishItOff() {
+    //if user is on firefox mobile warn them to change the extension of the file
+    if (detectFirefoxMobile()) {
+        alert("We've detected that you're on Firefox Mobile. Firefox Mobile may automatically change .lrc extensions to .txt as an antivirus measure."+
+        "\n\nPlease change the extension of the file to from .txt back to .lrc");
+    }
+
     finishEditingElement();
     let i = 0;
     let songName = $("#SongNameInput").val();
